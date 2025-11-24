@@ -1,22 +1,45 @@
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center;padding:20px 0}
-h1{font-size:3.5em;color:#ff3b30;margin:10px}
-.subtitle{color:#aaa;margin-bottom:30px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:0 10px;max-width:1200px;margin:auto}
-.item{position:relative;border-radius:12px;overflow:hidden;cursor:pointer}
-.item img{width:100%;height:200px;object-fit:cover}
-.title{position:absolute;bottom:50px;left:0;right:0;background:rgba(0,0,0,.8);padding:8px;font-size:1.1em}
-.meta{position:absolute;bottom:0;left:0;right:0;background:#ff3b30;padding:8px;font-size:.9em}
-.vip{color:#fff;font-weight:bold}
-.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);display:none;align-items:center;justify-content:center;z-index:99}
-.box{background:#111;padding:40px;border-radius:16px;width:90%;max-width:400px}
-.box h3{color:#ff3b30;font-size:1.4em}
-.box button{background:#ff3b30;color:#fff;border:none;padding:14px 40px;border-radius:50px;font-size:1.2em;cursor:pointer;margin-top:20px}
-.page{padding:30px;display:none}
-.chat{background:#111;border-radius:16px;padding:20px;margin:20px auto;max-width:500px}
-.bot{color:#ff3b30;font-weight:bold;margin-bottom:10px}
-.tip{font-size:.9em;color:#aaa;margin:15px 0}
-.uploadBtn{background:#333;color:#fff;padding:15px;border-radius:50px;width:100%;border:none;font-size:1.1em;cursor:pointer}
-#preview img{width:80px;height:80px;object-fit:cover;margin:5px;border-radius:8px}
-.msg{margin:15px 0;padding:12px;background:#222;border-radius:12px;display:inline-block;max-width:90%}
-.back{margin-top:30px;background:#333;padding:12px 30px;border-radius:50px}
+let imgCount = 0;
+document.querySelectorAll('.item').forEach(item => {
+  item.onclick = e => {
+    e.preventDefault();
+    document.getElementById('appName').textContent = item.dataset.app;
+    document.getElementById('gate').style.display = 'flex';
+  };
+});
+
+function enter() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('aiPage').style.display = 'block';
+  imgCount = 0;
+  document.getElementById('preview').innerHTML = '';
+  document.getElementById('messages').innerHTML = '';
+}
+
+function back() {
+  document.getElementById('aiPage').style.display = 'none';
+}
+
+// 选择图片后预览并计数
+document.getElementById('picker').onchange = function(e) {
+  const files = e.target.files;
+  for (let file of files) {
+    if (imgCount >= 3) break;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      imgCount++;
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      document.getElementById('preview').appendChild(img);
+      
+      if (imgCount === 3) {
+        setTimeout(() => {
+          const msg = document.createElement('div');
+          msg.className = 'msg';
+          msg.innerHTML = 'AI机器人 已验证通过！<br><br>群号：759098135<br>点击立即加入QQ群自取完整版资源';
+          document.getElementById('messages').appendChild(msg);
+        }, 800);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+};
