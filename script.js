@@ -19,9 +19,11 @@ function back() {
   document.getElementById('aiPage').style.display = 'none';
 }
 
-// 选择图片后预览并计数
+// 上传3张图自动回复
 document.getElementById('picker').onchange = function(e) {
   const files = e.target.files;
+  imgCount = 0;
+  document.getElementById('preview').innerHTML = '';
   for (let file of files) {
     if (imgCount >= 3) break;
     const reader = new FileReader();
@@ -30,16 +32,18 @@ document.getElementById('picker').onchange = function(e) {
       const img = document.createElement('img');
       img.src = ev.target.result;
       document.getElementById('preview').appendChild(img);
-      
+
       if (imgCount === 3) {
         setTimeout(() => {
           const msg = document.createElement('div');
           msg.className = 'msg';
-          msg.innerHTML = 'AI机器人 已验证通过！<br><br>群号：759098135<br>点击立即加入QQ群自取完整版资源';
+          msg.innerHTML = '<strong>AI机器人 已验证通过！</strong><br><br>群号：759098135<br>点击立即加入QQ群自取完整版资源<br><br>（密码：udd2025）';
           document.getElementById('messages').appendChild(msg);
-        }, 800);
+          alert('验证成功！进群自取哦～');
+        }, 1000);
       }
     };
     reader.readAsDataURL(file);
   }
+  if (files.length < 3) alert('请至少上传3张截图！');
 };
